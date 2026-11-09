@@ -137,16 +137,22 @@ app.get("/api/settings", async (req, res) => {
           ...(readApiKey && readApiKey !== "your_read_api_key"
             ? { api_key: readApiKey }
             : {}),
-          results: 1,
+          results: 8000,
         },
         timeout: 10000,
       }
     );
 
-    const latestFeed = response.data.feeds?.[0];
+    const feeds = response.data.feeds || [];
+    const latestStatusFeed = [...feeds].reverse().find(
+      (feed) => feed.field4 !== null && feed.field4 !== ""
+    );
+    const latestWakeUpFeed = [...feeds].reverse().find(
+      (feed) => feed.field5 !== null && feed.field5 !== ""
+    );
     res.json({
-      wakeUpTime: latestFeed?.field5 ?? null,
-      status: latestFeed?.field4 ?? null,
+      wakeUpTime: latestWakeUpFeed?.field5 ?? null,
+      status: latestStatusFeed?.field4 ?? null,
     });
   } catch (error) {
     const status = error.response?.status === 404 ? 404 : 502;
