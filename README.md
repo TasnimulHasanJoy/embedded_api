@@ -1,13 +1,13 @@
 # Circadian Blinds JSON API
 
-ছবির নির্দেশনা অনুযায়ী এই Express API ThingSpeak channel data JSON-এ দেয় এবং wake-up time ও blind/system status নেওয়ার POST endpoint রাখে।
+এই Express API ThingSpeak channel-এর data JSON-এ দেয়। Wake-up time ও blind/system status-এর POST request ThingSpeak-এ সংরক্ষণ করে। Channel-এর Field 4-এ blind status এবং Field 5-এ wake-up time লেখা হয়।
 
 ## চালু করার নিয়ম
 
 1. Node.js 18 বা নতুন সংস্করণ ইনস্টল করুন।
 2. এই ফোল্ডারে terminal খুলে `npm install` চালান।
 3. `.env.example` কপি করে `.env` নাম দিন।
-4. `.env`-এ ThingSpeak Channel ID এবং Read API Key বসান। Public channel হলে Read API Key খালি রাখা যায়।
+4. `.env`-এ ThingSpeak Channel ID, Read API Key, এবং Write API Key বসান। Public channel হলে Read API Key খালি রাখা যায়; POST endpoint চালাতে Write API Key লাগবে।
 5. `npm start` চালান। API চলবে `http://localhost:3000`-এ।
 
 ## Endpoints
@@ -38,9 +38,9 @@
 
 ### বর্তমান API settings দেখা
 
-`GET /api/settings` — বর্তমানে রাখা wake-up time ও status ফেরত দেয়।
+`GET /api/settings` — ThingSpeak-এর সর্বশেষ Field 4 ও Field 5 থেকে status এবং wake-up time ফেরত দেয়।
 
 ## সীমাবদ্ধতা
 
-Wake-up time ও status আপাতত সার্ভারের memory-তে রাখা হয়; সার্ভার restart হলে সেগুলো default-এ ফিরে যায়। এই API data ThingSpeak থেকে পড়ে। Arduino Uno sketch নিজে ThingSpeak-এ data পাঠায় না, আর এই API-তে POST করা setting Uno-তে পাঠানোর সংযোগও এখনো নেই।
+ThingSpeak-এর free plan-এ channel update-এর মাঝে নির্দিষ্ট বিরতি লাগে। খুব দ্রুত পরপর POST করলে ThingSpeak update গ্রহণ নাও করতে পারে। Arduino Uno sketch নিজে Wi‑Fi দিয়ে এই API-তে যুক্ত নয়।
 
